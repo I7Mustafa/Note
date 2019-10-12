@@ -7,7 +7,8 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [Note::class],
-    version = 1
+    version = 1,
+    exportSchema = true
 )
 abstract class NoteDatabase :RoomDatabase(){
 
@@ -15,15 +16,16 @@ abstract class NoteDatabase :RoomDatabase(){
 
     companion object {
 
-        @Volatile private var instances: NoteDatabase? = null
+        @Volatile
+        private var instances: NoteDatabase? = null
 
         private val LOCK = Any()
 
         operator fun invoke(context: Context) = instances?: synchronized(LOCK){
-            instances?: buldDatabase(context).also { instances = it }
+            instances?: buildDatabase(context).also { instances = it }
         }
 
-        private fun buldDatabase (context: Context) = Room.databaseBuilder(
+        private fun buildDatabase (context: Context) = Room.databaseBuilder(
             context.applicationContext,
             NoteDatabase::class.java,
             "noteDataBase"
